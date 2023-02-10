@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->integer('form');
+            $table->integer('from')->nullable();
             $table->integer('to');
             $table->float('amount');
             $table->integer('transactionType');

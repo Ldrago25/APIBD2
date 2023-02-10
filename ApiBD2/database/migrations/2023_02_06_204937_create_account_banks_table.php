@@ -16,8 +16,7 @@ return new class extends Migration
         Schema::create('account_banks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->integer('nro');
-            $table->string('type');
+            $table->float('balance');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
+use App\Models\AccountBank;
 use App\Models\Transaction;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
@@ -26,8 +27,67 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $transaction = new Transaction($request->all());
+
+        if($transaction->transactionType == 1){
+            $accountTo = AccountBank::find($transaction->to);
+            if($accountTo) {
+                $accountTo->balance += $transaction->amount;
+                $accountTo->save();
+                $transaction->from = null;
+                $transaction->save();
+                return Response("Deposit success");
+            } else {
+                return Response("Account not found");
+            }
+            
+        }
+        if($transaction->transactionType == 2){
+            $accountTo = AccountBank::find($transaction->to);
+            if($accountTo) {
+                if($accountTo->balance >= $transaction->amount){
+                    $accountTo->balance -= $transaction->amount;
+                    $accountTo->save();
+                    $transaction->from = null;
+                    $transaction->save();
+                    return Response("Withdrawal success");                    
+                } else {
+                    return Response("Insufficient balance");
+                }
+
+            } else {
+                return Response("Account not found");
+            }
+
+        }
+        if($transaction->transactionType == 3){
+            $accountFrom = AccountBank::find($transaction->from);
+            $accountTo = AccountBank::find($transaction->to);
+
+            if($accountTo && $accountFrom) {
+                if($accountFrom->balance >= $transaction->amount){
+                    $accountFrom->balance -= $transaction->amount;
+                    $accountTo->balance += $transaction->amount;
+                    $accountFrom->save();
+                    $accountTo->save();
+                    $transaction->save();
+                    return Response("Transfer success");                    
+                } else {
+                    return Response("Insufficient balance");
+                }
+
+            } else {
+                return Response("Account not found");
+            }
+
+        }
     }
+
+    /**
+     * 1deposit
+     * 2withdrawal
+     * 3transfer
+     */
 
     /**
      * Display the specified resource.

@@ -12,6 +12,9 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Model
 {
     use HasFactory;
+
+    protected $fillable = ["name","lastName","indentification","email","password"];
+
     public function account_banks(){
         return $this->hasMany(AccountBank::class);
     }

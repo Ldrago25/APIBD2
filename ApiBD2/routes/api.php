@@ -15,3 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::apiResource('/user',App\Http\Controllers\UserController::class);
+Route::apiResource('/transaction',App\Http\Controllers\TransactionController::class);

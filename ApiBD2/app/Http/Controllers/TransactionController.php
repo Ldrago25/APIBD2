@@ -151,7 +151,7 @@ class TransactionController extends Controller
 
         foreach($allAccountBanks as $item){
             $transactionsForTo=Transaction::where('to', $item->id)->get();
-            $transactionsForFrom=Transaction::where('to', $item->id)->get();
+            $transactionsForFrom=Transaction::where('from', $item->id)->get();
             $item->balance=0;
             foreach ($transactionsForTo as $key ) {
                 $key->delete();

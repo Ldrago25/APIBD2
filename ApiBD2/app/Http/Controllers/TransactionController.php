@@ -6,6 +6,7 @@ use App\Models\AccountBank;
 use App\Models\Transaction;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class TransactionController extends Controller
 {
@@ -40,7 +41,7 @@ class TransactionController extends Controller
             } else {
                 return Response("Account not found");
             }
-            
+
         }
         if($transaction->transactionType == 2){
             $accountTo = AccountBank::find($transaction->to);
@@ -50,7 +51,7 @@ class TransactionController extends Controller
                     $accountTo->save();
                     $transaction->from = null;
                     $transaction->save();
-                    return Response("Withdrawal success");                    
+                    return Response("Withdrawal success");
                 } else {
                     return Response("Insufficient balance");
                 }
@@ -71,7 +72,7 @@ class TransactionController extends Controller
                     $accountFrom->save();
                     $accountTo->save();
                     $transaction->save();
-                    return Response("Transfer success");                    
+                    return Response("Transfer success");
                 } else {
                     return Response("Insufficient balance");
                 }
@@ -120,6 +121,18 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $post)
     {
-        //
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function checkingAndCleaner(Request $request)
+    {
+        ///logica para checkear transacciones con cuentas y limpiar datos
+        
     }
 }

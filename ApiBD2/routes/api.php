@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TransactionController;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,4 +18,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('/user',App\Http\Controllers\UserController::class);
 Route::apiResource('/transaction',App\Http\Controllers\TransactionController::class);
-Route::post('/transaction/cleaner',[Transaction::class,'checkingAndCleaner']);
+Route::post('/transaction/cleaner',[TransactionController::class,'checkingAndCleaner']);

@@ -133,6 +133,36 @@ class TransactionController extends Controller
     public function checkingAndCleaner(Request $request)
     {
         ///logica para checkear transacciones con cuentas y limpiar datos
-        
+        $allAccountBanks=AccountBank::all();
+        $arrayAccountError=[];
+        foreach($allAccountBanks as $item){
+            $valueBalanceAccount=$item->balance;
+            $valueBalanceTransactions=0;
+            $flag=false;
+            $transactions=Transaction::where('to', $item->id)->get();
+            foreach ($transactions as $itemT) {
+            $flag=true;
+            $valueBalanceTransactions+=$itemT->	amount;
+            }
+            if($flag &&  $valueBalanceAccount!=$valueBalanceTransactions){
+                array_push($arrayAccountError,['idAccountBank'=>$item->id,'balanceAccount'=>$valueBalanceAccount,'balanceTransactionTotal'=>$valueBalanceTransactions]);
+            }
+        }
+
+        foreach($allAccountBanks as $item){
+            $transactionsForTo=Transaction::where('to', $item->id)->get();
+            $transactionsForFrom=Transaction::where('to', $item->id)->get();
+            $item->balance=0;
+            foreach ($transactionsForTo as $key ) {
+                $key->delete();
+            }
+            foreach ($transactionsForFrom as $key ) {
+                $key->delete();
+            }
+            $item->save();
+        }
+        return response()->json([
+            'data' => $arrayAccountError
+        ]);
     }
 }

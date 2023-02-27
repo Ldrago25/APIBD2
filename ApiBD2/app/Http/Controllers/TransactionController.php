@@ -165,4 +165,26 @@ class TransactionController extends Controller
             'data' => $arrayAccountError
         ]);
     }
+    public function checkingTransaction(Request $request)
+    {
+        ///logica para checkear transacciones con cuentas y limpiar datos
+        $allAccountBanks=AccountBank::all();
+        $arrayAccountError=[];
+        foreach($allAccountBanks as $item){
+            $valueBalanceAccount=$item->balance;
+            $valueBalanceTransactions=0;
+            $flag=false;
+            $transactions=Transaction::where('to', $item->id)->get();
+            foreach ($transactions as $itemT) {
+            $flag=true;
+            $valueBalanceTransactions+=$itemT->	amount;
+            }
+            if($flag &&  $valueBalanceAccount!=$valueBalanceTransactions){
+                array_push($arrayAccountError,['idAccountBank'=>$item->id,'balanceAccount'=>$valueBalanceAccount,'balanceTransactionTotal'=>$valueBalanceTransactions]);
+            }
+        }
+        return response()->json([
+            'data' => $arrayAccountError
+        ]);
+    }
 }

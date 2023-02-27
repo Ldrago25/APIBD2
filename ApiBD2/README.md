@@ -12,12 +12,14 @@ transactionType:
 3 = transferencia
 
 json:create transaction
+
 {
     "from": 1,
     "to": 2,
-    "amount": 450,
-    "transactionType": 3
+    "amount": 1050,
+    "transactionType": 1
 }
+
 
 json:create user
 {

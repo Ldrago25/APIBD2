@@ -1,36 +1,18 @@
 //DESPOSITO
 DELIMITER $$
-CREATE TRIGGER after_deposit_transaction
+CREATE TRIGGER after_insert_transaction
 AFTER INSERT ON transactions
 FOR EACH ROW
 BEGIN
   IF NEW.transactionType = 1 THEN
     UPDATE account_banks
     SET balance = balance + NEW.amount
-    WHERE id  = NEW.to;
-  END IF;
-END;
-
-//RETIROS
-DELIMITER $$
-CREATE TRIGGER after_withdrawal_transaction
-AFTER INSERT ON transactions
-FOR EACH ROW
-BEGIN
-  IF NEW.transactionType = 2 THEN
+    WHERE id = NEW.to;
+  ELSEIF NEW.transactionType = 2 THEN
     UPDATE account_banks
     SET balance = balance - NEW.amount
-    WHERE id = NEW.to;
-  END IF;
-END;
-
-//Transferencia
-DELIMITER $$
-CREATE TRIGGER after_transfer_transaction
-AFTER INSERT ON transactions
-FOR EACH ROW
-BEGIN
-  IF NEW.transactionType = 3 THEN
+    WHERE id = NEW.from;
+  ELSEIF NEW.transactionType = 3 THEN
     UPDATE account_banks
     SET balance = balance - NEW.amount
     WHERE id = NEW.from;

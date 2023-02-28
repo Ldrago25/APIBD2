@@ -1,4 +1,4 @@
-//DESPOSITO
+//DESPOSITO,Retiro y Transferencias
 DELIMITER $$
 CREATE TRIGGER after_insert_transaction
 AFTER INSERT ON transactions

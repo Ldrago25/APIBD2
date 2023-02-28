@@ -11,7 +11,7 @@ BEGIN
   ELSEIF NEW.transactionType = 2 THEN
     UPDATE account_banks
     SET balance = balance - NEW.amount
-    WHERE id = NEW.from;
+    WHERE id = NEW.to;
   ELSEIF NEW.transactionType = 3 THEN
     UPDATE account_banks
     SET balance = balance - NEW.amount

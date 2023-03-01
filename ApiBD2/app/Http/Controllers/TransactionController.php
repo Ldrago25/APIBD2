@@ -33,8 +33,8 @@ class TransactionController extends Controller
         if($transaction->transactionType == 1){
             $accountTo = AccountBank::find($transaction->to);
             if($accountTo) {
-                $accountTo->balance += $transaction->amount;
-                $accountTo->save();
+                // $accountTo->balance += $transaction->amount;
+                // $accountTo->save();
                 $transaction->from = null;
                 $transaction->save();
                 return Response("Deposit success");
@@ -47,8 +47,8 @@ class TransactionController extends Controller
             $accountTo = AccountBank::find($transaction->to);
             if($accountTo) {
                 if($accountTo->balance >= $transaction->amount){
-                    $accountTo->balance -= $transaction->amount;
-                    $accountTo->save();
+                    // $accountTo->balance -= $transaction->amount;
+                    // $accountTo->save();
                     $transaction->from = null;
                     $transaction->save();
                     return Response("Withdrawal success");
@@ -67,10 +67,10 @@ class TransactionController extends Controller
 
             if($accountTo && $accountFrom) {
                 if($accountFrom->balance >= $transaction->amount){
-                    $accountFrom->balance -= $transaction->amount;
-                    $accountTo->balance += $transaction->amount;
-                    $accountFrom->save();
-                    $accountTo->save();
+                    // $accountFrom->balance -= $transaction->amount;
+                    // $accountTo->balance += $transaction->amount;
+                    // $accountFrom->save();
+                    // $accountTo->save();
                     $transaction->save();
                     return Response("Transfer success");
                 } else {

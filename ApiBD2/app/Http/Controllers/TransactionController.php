@@ -29,12 +29,16 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $transaction = new Transaction($request->all());
-
+        $estatusActualizar = env('ESTATUS_ACTUALIZAR');
+        
         if($transaction->transactionType == 1){
             $accountTo = AccountBank::find($transaction->to);
             if($accountTo) {
-                // $accountTo->balance += $transaction->amount;
-                // $accountTo->save();
+                // var_dump($estatusActualizar);
+                if($estatusActualizar){
+                    $accountTo->balance += $transaction->amount;
+                    $accountTo->save();
+                }
                 $transaction->from = null;
                 $transaction->save();
                 return Response("Deposit success");
@@ -45,10 +49,14 @@ class TransactionController extends Controller
         }
         if($transaction->transactionType == 2){
             $accountTo = AccountBank::find($transaction->to);
+            $estatusActualizar = env('ESTATUS_ACTUALIZAR');
             if($accountTo) {
                 if($accountTo->balance >= $transaction->amount){
-                    // $accountTo->balance -= $transaction->amount;
-                    // $accountTo->save();
+                    if($estatusActualizar){
+                        $accountTo->balance -= $transaction->amount;
+                        $accountTo->save(); 
+                    }
+                 
                     $transaction->from = null;
                     $transaction->save();
                     return Response("Withdrawal success");
@@ -64,13 +72,15 @@ class TransactionController extends Controller
         if($transaction->transactionType == 3){
             $accountFrom = AccountBank::find($transaction->from);
             $accountTo = AccountBank::find($transaction->to);
-
+            $estatusActualizar = env('ESTATUS_ACTUALIZAR');
             if($accountTo && $accountFrom) {
                 if($accountFrom->balance >= $transaction->amount){
-                    // $accountFrom->balance -= $transaction->amount;
-                    // $accountTo->balance += $transaction->amount;
-                    // $accountFrom->save();
-                    // $accountTo->save();
+                    if($estatusActualizar){
+                        $accountFrom->balance -= $transaction->amount;
+                        $accountTo->balance += $transaction->amount;
+                        $accountFrom->save();
+                        $accountTo->save();
+                    }
                     $transaction->save();
                     return Response("Transfer success");
                 } else {

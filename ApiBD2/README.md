@@ -29,3 +29,9 @@ json:create user
     "email": "carlos96cav@gmail.com",
     "password": "Carlos96"
 }
+
+json: activar o desactivar funcion para actualizar saldo de cuentas
+endpoint:/api/actualizar-estatus
+ {
+  "estatus": true/false,
+}

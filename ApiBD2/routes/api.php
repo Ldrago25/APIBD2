@@ -19,3 +19,4 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('/user',App\Http\Controllers\UserController::class);
 Route::apiResource('/transaction',App\Http\Controllers\TransactionController::class);
 Route::post('/transaction/cleaner',[TransactionController::class,'checkingAndCleaner']);
+Route::post('/transaction/checkingTransaction',[TransactionController::class,'checkingTransaction']);

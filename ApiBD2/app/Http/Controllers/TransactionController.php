@@ -182,15 +182,25 @@ class TransactionController extends Controller
         $arrayAccountError=[];
         foreach($allAccountBanks as $item){
             $valueBalanceAccount=$item->balance;
-            $valueBalanceTransactions=0;
+            $valueBalanceTransactionsT=0;
+            $valueBalanceTransactionsTo=0;
+            $valueBalanceTransactionsFrom=0;
             $flag=false;
-            $transactions=Transaction::where('to', $item->id)->get();
-            foreach ($transactions as $itemT) {
+            $transactionsTo=Transaction::where('to', $item->id)->get();
+            $transactionsFrom=Transaction::where('from', $item->id)->get();
+            foreach ($transactionsTo as $itemT) {
             $flag=true;
-            $valueBalanceTransactions+=$itemT->	amount;
+            $valueBalanceTransactionsTo+=$itemT->	amount;
             }
-            if($flag &&  $valueBalanceAccount!=$valueBalanceTransactions){
-                array_push($arrayAccountError,['idAccountBank'=>$item->id,'balanceAccount'=>$valueBalanceAccount,'balanceTransactionTotal'=>$valueBalanceTransactions]);
+            foreach ($transactionsFrom as $itemT) {
+                $valueBalanceTransactionsFrom+=$itemT->	amount;
+            }
+
+            if($flag){
+                $valueBalanceTransactionsT= $valueBalanceTransactionsTo -  $valueBalanceTransactionsFrom;
+            }
+            if($valueBalanceTransactionsT>0 && ( $valueBalanceAccount !=  $valueBalanceTransactionsT)){
+                array_push($arrayAccountError,['idAccountBank'=>$item->id,'balanceAccount'=>$valueBalanceAccount,'balanceTransactionTotal'=>$valueBalanceTransactionsT]);
             }
         }
         return response()->json([

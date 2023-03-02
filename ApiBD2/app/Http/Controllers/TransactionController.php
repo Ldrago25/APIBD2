@@ -46,10 +46,9 @@ class TransactionController extends Controller
                 return Response("Account not found");
             }
 
-        }
-        if($transaction->transactionType == 2){
+        } else  if($transaction->transactionType == 2){
             $accountTo = AccountBank::find($transaction->to);
-            $estatusActualizar = env('ESTATUS_ACTUALIZAR');
+            
             if($accountTo) {
                 if($accountTo->balance >= $transaction->amount){
                     if($estatusActualizar){
@@ -68,11 +67,10 @@ class TransactionController extends Controller
                 return Response("Account not found");
             }
 
-        }
-        if($transaction->transactionType == 3){
+        }else if($transaction->transactionType == 3){
             $accountFrom = AccountBank::find($transaction->from);
             $accountTo = AccountBank::find($transaction->to);
-            $estatusActualizar = env('ESTATUS_ACTUALIZAR');
+            
             if($accountTo && $accountFrom) {
                 if($accountFrom->balance >= $transaction->amount){
                     if($estatusActualizar){

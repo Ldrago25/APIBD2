@@ -7,6 +7,10 @@ use App\Models\Transaction;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\Cast\Object_;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
@@ -213,6 +217,42 @@ class TransactionController extends Controller
         }
         return response()->json([
             'data' => $arrayAccountError
+        ]);
+    }
+    public function createTrigger(Request $request){
+        
+        DB::unprepared('DROP TRIGGER IF EXISTS `after_insert_transaction`');
+        
+        DB::unprepared('CREATE TRIGGER after_insert_transaction
+        AFTER INSERT ON transactions
+        FOR EACH ROW
+        BEGIN
+          IF NEW.transactionType = 1 THEN
+            UPDATE account_banks
+            SET balance = balance + NEW.amount
+            WHERE id = NEW.to;
+          ELSEIF NEW.transactionType = 2 THEN
+            UPDATE account_banks
+            SET balance = balance - NEW.amount
+            WHERE id = NEW.to;
+          ELSEIF NEW.transactionType = 3 THEN
+            UPDATE account_banks
+            SET balance = balance - NEW.amount
+            WHERE id = NEW.from;
+            UPDATE account_banks
+            SET balance = balance + NEW.amount
+            WHERE id = NEW.to;
+          END IF;
+        END
+        ');
+        return response()->json([
+            'resp' => "create trigger success"
+        ]);
+    }
+    public function deleteTrigger(Request $request){
+        DB::unprepared('DROP TRIGGER IF EXISTS `after_insert_transaction`');
+        return response()->json([
+            'resp' => "delete trigger success"
         ]);
     }
 }

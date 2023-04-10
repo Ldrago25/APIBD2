@@ -19,7 +19,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'indentification' => '123nsd',
+            'indentification' => Str::random(8),
             'lastName' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),

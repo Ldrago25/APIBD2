@@ -55,7 +55,21 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        // Obtener el usuario por ID
+        $user = User::find($id);
+
+        // Verificar si se encontró el usuario
+        if (!$user) {
+            // Retornar una respuesta de error en caso de que no se encuentre el usuario
+            return response()->json([
+                'error' => 'Usuario no encontrado'
+            ], 404);
+        }
+
+        // Retornar el usuario como una respuesta en formato JSON
+        return response()->json([
+            'data' => $user
+        ], 200);
     }
 
     /**

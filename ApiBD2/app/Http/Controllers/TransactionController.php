@@ -255,4 +255,33 @@ class TransactionController extends Controller
             'resp' => "delete trigger success"
         ]);
     }
+
+    public function mostrarSumaDepositosYSaldos()
+    {
+        // Utilizar el modelo Transaction para realizar la consulta
+        // $total = Transaction::where('transactionType', 1)->sum('amount', ['group' => 'to']);
+
+        $sumaDepositosPorTo = Transaction::selectRaw('SUM(amount) as sumaDepositos, to')
+            ->where('transactionType', 1)
+            ->groupBy('to')
+            ->get();
+
+        // Crear un arreglo para almacenar los resultados
+        $resultados = [];
+
+        // Recorrer el resultado de la suma de depósitos por 'to' y asignar los valores requeridos
+        foreach ($sumaDepositosPorTo as $item) {
+            $resultado = [
+                'to' => $item->to,
+                'suma' => $item->sumaDepositos
+            ];
+            $resultados[] = $resultado;
+        }
+
+        // Retornar los resultados en una respuesta JSON
+        return response()->json($toresultadotal);
+    }
+
+    
+
 }
